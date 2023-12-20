@@ -70,7 +70,7 @@ public class PessoaServico extends FacadeRepositorio {
     }
 
     public Pessoa buscar(String id) {
-        Pessoa pessoa = this.pessoa.buscar(id);
+        Pessoa pessoa = this.pessoa.buscar(id,null);
 
         if (Objects.isNull(pessoa)) {
             String msg = "Pessoa não cadastrada na base de dados.";

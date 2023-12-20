@@ -12,7 +12,7 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-        <addPrimaryKey tableName="pessoa" columnNames="id" constraintName="pk_id" />
+        <addPrimaryKey tableName="pessoa" columnNames="id" constraintName="pk_id_pessoa" />
         <addUniqueConstraint tableName="pessoa" columnNames="cpf" constraintName="uq_cpf" />
     </changeSet>
 </databaseChangeLog>

@@ -42,9 +42,10 @@ public interface PessoaRepositorio extends JpaRepository<Pessoa,String> {
     @Query(value =
         "SELECT * " +
         "FROM pessoa " +
-        "WHERE id = :id"
+        "WHERE id = :id " +
+        "OR cpf = :cpf"
     ,nativeQuery = true)
-    Pessoa buscar(String id);
+    Pessoa buscar(String id,String cpf);
 
     @Query(value =
         "SELECT CASE WHEN COUNT(id) > 0 THEN 'true' ELSE 'false' END " +
