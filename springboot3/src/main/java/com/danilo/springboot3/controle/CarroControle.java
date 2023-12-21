@@ -27,7 +27,7 @@ public class CarroControle extends FacadeServico {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<Void> alterar(@RequestBody @Valid CarroDTO carro) {
         this.carro.alterar(carro);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -42,9 +42,10 @@ public interface CarroRepositorio extends JpaRepository<Carro,String> {
     @Query(value =
         "SELECT * " +
         "FROM carro " +
-        "WHERE id = :id"
+        "WHERE id = :id " +
+        "OR (nome = :nome AND ano = :ano AND pessoa_id = :idPessoa)"
     ,nativeQuery = true)
-    Carro buscar(String id);
+    Carro buscar(String id,String nome,Integer ano,String idPessoa);
 
     @Query(value =
         "SELECT CASE WHEN COUNT(id) > 0 THEN 'true' ELSE 'false' END " +

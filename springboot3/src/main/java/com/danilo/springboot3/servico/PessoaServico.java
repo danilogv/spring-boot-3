@@ -5,6 +5,7 @@ import com.danilo.springboot3.dto.PessoaDTO;
 import com.danilo.springboot3.padrao_projeto.FacadeRepositorio;
 import com.danilo.springboot3.utilitario.Funcoes;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PessoaServico extends FacadeRepositorio {
+public class PessoaServico {
+
+    @Autowired
+    private FacadeRepositorio repositorio;
 
     @Transactional
     public void inserir(PessoaDTO pessoa) {
@@ -22,12 +26,12 @@ public class PessoaServico extends FacadeRepositorio {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,msg);
         }
 
-        if (this.pessoa.existe(pessoa)) {
+        if (this.repositorio.pessoa.existe(pessoa)) {
             String msg = "Pessoa já cadastrada na base de dados.";
             throw new ResponseStatusException(HttpStatus.CONFLICT,msg);
         }
 
-        this.pessoa.inserir(pessoa);
+        this.repositorio.pessoa.inserir(pessoa);
     }
 
     @Transactional
@@ -37,12 +41,12 @@ public class PessoaServico extends FacadeRepositorio {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,msg);
         }
 
-        if (!this.pessoa.existe(pessoa)) {
+        if (!this.repositorio.pessoa.existe(pessoa)) {
             String msg = "Pessoa não cadastrada na base de dados.";
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,msg);
         }
 
-        this.pessoa.alterar(pessoa);
+        this.repositorio.pessoa.alterar(pessoa);
     }
 
     @Transactional
@@ -50,16 +54,16 @@ public class PessoaServico extends FacadeRepositorio {
         PessoaDTO pessoa = new PessoaDTO();
         pessoa.setId(id);
 
-        if (!this.pessoa.existe(pessoa)) {
+        if (!this.repositorio.pessoa.existe(pessoa)) {
             String msg = "Pessoa não cadastrada na base de dados.";
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,msg);
         }
 
-        this.pessoa.remover(id);
+        this.repositorio.pessoa.remover(id);
     }
 
     public List<Pessoa> buscarTodos() {
-        List<Pessoa> pessoas = this.pessoa.buscarTodos();
+        List<Pessoa> pessoas = this.repositorio.pessoa.buscarTodos();
 
         if (pessoas.isEmpty()) {
             String msg = "Não há pessoas cadastradas na base de dados.";
@@ -70,7 +74,7 @@ public class PessoaServico extends FacadeRepositorio {
     }
 
     public Pessoa buscar(String id) {
-        Pessoa pessoa = this.pessoa.buscar(id,null);
+        Pessoa pessoa = this.repositorio.pessoa.buscar(id,null);
 
         if (Objects.isNull(pessoa)) {
             String msg = "Pessoa não cadastrada na base de dados.";

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 public class FacadeRepositorio {
 
     @Autowired
-    protected PessoaRepositorio pessoa;
+    public PessoaRepositorio pessoa;
 
     @Autowired
-    protected CarroRepositorio carro;
+    public CarroRepositorio carro;
 
 }

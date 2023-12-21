@@ -2,16 +2,13 @@ package com.danilo.springboot3;
 
 import com.danilo.springboot3.dominio.Pessoa;
 import com.danilo.springboot3.dto.PessoaDTO;
-import com.danilo.springboot3.repositorio.PessoaRepositorio;
+import com.danilo.springboot3.padrao_projeto.FacadeRepositorio;
 import jakarta.transaction.Transactional;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,13 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(locations = "classpath:application.properties")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,classes = Principal.class)
 public class PessoaTeste {
 
     @Autowired
-    private PessoaRepositorio repositorio;
+    private FacadeRepositorio repositorio;
 
     @Autowired
     private MockMvc mock;
@@ -47,28 +43,13 @@ public class PessoaTeste {
     private final String URL = "/pessoa";
 
     @Test
-    public void pessoa_buscarTodos_status204() throws Exception {
-        this.mock.perform(get(this.URL)).andExpect(status().isNoContent());
-    }
-
-    @Test
-    @Transactional
-    public void pessoa_buscarTodos_status200() throws Exception {
-        String nome = "Danilo Gonçalves Vicente";
-        String cpf = "462.350.090-03";
-        PessoaDTO pessoa = this.obtemPessoa(null,nome,cpf);
-        this.repositorio.inserir(pessoa);
-        this.mock.perform(get(this.URL)).andExpect(status().isOk());
-    }
-
-    @Test
     @Transactional
     public void pessoa_buscar_status200() throws Exception {
         String nome = "Danilo Gonçalves Vicente";
         String cpf = "462.350.090-03";
         PessoaDTO dto = this.obtemPessoa(null,nome,cpf);
-        this.repositorio.inserir(dto);
-        Pessoa pessoa = this.repositorio.buscar(null,cpf);
+        this.repositorio.pessoa.inserir(dto);
+        Pessoa pessoa = this.repositorio.pessoa.buscar(null,cpf);
         String url = this.URL + "/" + pessoa.getId();
         this.mock.perform(get(url)).andExpect(status().isOk());
     }
@@ -79,7 +60,7 @@ public class PessoaTeste {
         String nome = "Danilo Gonçalves";
         String cpf = "462.350.090-03";
         PessoaDTO dto = this.obtemPessoa(null,nome,cpf);
-        this.repositorio.inserir(dto);
+        this.repositorio.pessoa.inserir(dto);
         String url = this.URL + "/cffa87f1-bada-4c7d-b390-87e4a02a6acf";
         this.mock.perform(get(url)).andExpect(status().isBadRequest());
     }
@@ -109,7 +90,7 @@ public class PessoaTeste {
         String cpf = "462.350.090-03";
         PessoaDTO pessoa = this.obtemPessoa(null,nome,cpf);
         String json = this.criaJson(pessoa).toString();
-        this.repositorio.inserir(pessoa);
+        this.repositorio.pessoa.inserir(pessoa);
         this.mock.perform(post(this.URL).contentType(this.JSON).content(json)).andExpect(status().isConflict());
     }
 
@@ -119,11 +100,11 @@ public class PessoaTeste {
         String nome = "Danilo Gonçalves";
         String cpf = "462.350.090-03";
         PessoaDTO dto = this.obtemPessoa(null,nome,cpf);
-        this.repositorio.inserir(dto);
+        this.repositorio.pessoa.inserir(dto);
 
         nome = "Danilo Gonçalves Vicente";
         cpf = "462.350.090-03";
-        Pessoa pessoa = this.repositorio.buscar(null,cpf);
+        Pessoa pessoa = this.repositorio.pessoa.buscar(null,cpf);
         dto = this.obtemPessoa(pessoa.getId(),nome,cpf);
         String json = this.criaJson(dto).toString();
         this.mock.perform(put(this.URL).contentType(this.JSON).content(json)).andExpect(status().isNoContent());
@@ -135,14 +116,29 @@ public class PessoaTeste {
         String nome = "Danilo Gonçalves Vicente";
         String cpf = "462.350.090-03";
         PessoaDTO dto = this.obtemPessoa(null,nome,cpf);
-        this.repositorio.inserir(dto);
+        this.repositorio.pessoa.inserir(dto);
 
         nome = "";
         cpf = "462.350.090-03";
-        Pessoa pessoa = this.repositorio.buscar(null,cpf);
+        Pessoa pessoa = this.repositorio.pessoa.buscar(null,cpf);
         dto = this.obtemPessoa(pessoa.getId(),nome,cpf);
         String json = this.criaJson(dto).toString();
         this.mock.perform(put(this.URL).contentType(this.JSON).content(json)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void pessoa_buscarTodos_status204() throws Exception {
+        this.mock.perform(get(this.URL)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Transactional
+    public void pessoa_buscarTodos_status200() throws Exception {
+        String nome = "Danilo Gonçalves Vicente";
+        String cpf = "462.350.090-03";
+        PessoaDTO pessoa = this.obtemPessoa(null,nome,cpf);
+        this.repositorio.pessoa.inserir(pessoa);
+        this.mock.perform(get(this.URL)).andExpect(status().isOk());
     }
 
     private JSONObject criaJson(PessoaDTO pessoa) throws JSONException {
