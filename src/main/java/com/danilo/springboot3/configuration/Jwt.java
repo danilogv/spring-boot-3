@@ -1,13 +1,16 @@
 package com.danilo.springboot3.configuration;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import javax.xml.bind.DatatypeConverter;
+
+import javax.crypto.SecretKey;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -22,19 +25,23 @@ public class Jwt {
     @Value("${jwt.auth.expires_in}")
     private int expiresIn;
 
-    private final SignatureAlgorithm SIGNATURE = SignatureAlgorithm.HS256;
+    public String generateToken(String username) {
+        byte[] secretKeyBytes = this.key.getBytes();
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+        Instant now = Instant.now();
+        Instant expiration = now.plusSeconds(this.expiresIn);
+        Date expDate = Date.from(expiration);
 
-    private Claims getClaims(String token) {
-        Claims claims;
+        String token = Jwts.builder()
+            .issuer(this.name)
+            .subject(username)
+            .expiration(expDate)
+            .issuedAt(Date.from(now))
+            .signWith(secretKey)
+            .compact()
+        ;
 
-        try {
-            claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(this.key)).parseClaimsJws(token).getBody();
-        }
-        catch (Exception ex) {
-            claims = null;
-        }
-
-        return claims;
+        return token;
     }
 
     public String getUsername(String token) {
@@ -49,17 +56,6 @@ public class Jwt {
         }
 
         return username;
-    }
-
-    public String generateToken(String username) {
-        return Jwts.builder()
-            .setIssuer(this.name)
-            .setSubject(username)
-            .setIssuedAt(new Date())
-            .setExpiration(this.getDateExpiration())
-            .signWith(this.SIGNATURE,this.key)
-            .compact()
-        ;
     }
 
     public Boolean validateToken(String token,UserDetails user) {
@@ -80,8 +76,12 @@ public class Jwt {
         return null;
     }
 
-    private Date getDateExpiration() {
-        return new Date(new Date().getTime() + this.expiresIn * 1000L);
+    private Claims getClaims(String token) {
+        byte[] secretKeyBytes = this.key.getBytes();
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+        JwtParser parser = Jwts.parser().verifyWith(secretKey).build();
+        Claims claims = parser.parseSignedClaims(token).getPayload();
+        return claims;
     }
 
     private Boolean tokenHasExpired(String token) {

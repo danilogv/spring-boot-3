@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,13 +30,13 @@ public class Exceptions {
         }
     }
 
-    /*@ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorDTO> errorLogin(UsernameNotFoundException ex) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         String msg = ex.getMessage();
         ErrorDTO error = new ErrorDTO(status.value(),msg);
         return new ResponseEntity<>(error,status);
-    }*/
+    }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorDTO> errorBusinessRule(ResponseStatusException ex) {
