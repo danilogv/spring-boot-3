@@ -1,32 +1,30 @@
 package com.danilo.springboot3.domain;
 
-import com.danilo.springboot3.enumeration.Permission;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user_login")
+@Table(name = "user")
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(of = {"username"})
-public class User implements UserDetails,GrantedAuthority,Serializable {
+public class User implements UserDetails,Serializable {
 
     @Id
     @Column(name = "id",nullable = false,unique = true)
@@ -38,21 +36,13 @@ public class User implements UserDetails,GrantedAuthority,Serializable {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "permission",nullable = false)
-    private Permission permission;
+    @ManyToMany
+    @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> permissions = List.of("ADMIN","USER");
-        List<SimpleGrantedAuthority> authorizations = new ArrayList<>();
-
-        permissions.forEach((permission) -> {
-            SimpleGrantedAuthority authorization = new SimpleGrantedAuthority(permission);
-            authorizations.add(authorization);
-        });
-
-        return authorizations;
+        return this.roles;
     }
 
     @Override
@@ -83,11 +73,6 @@ public class User implements UserDetails,GrantedAuthority,Serializable {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String getAuthority() {
-        return this.permission.name();
     }
 
 }

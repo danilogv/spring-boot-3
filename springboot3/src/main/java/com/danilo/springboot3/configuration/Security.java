@@ -1,15 +1,15 @@
 package com.danilo.springboot3.configuration;
 
 import com.danilo.springboot3.design_pattern.FacadeService;
+import com.danilo.springboot3.enumeration.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,11 +44,6 @@ public class Security {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
-        return authConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
     public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowedOrigins(List.of("*"));
@@ -59,6 +54,11 @@ public class Security {
         UrlBasedCorsConfigurationSource configuration = new UrlBasedCorsConfigurationSource();
         configuration.registerCorsConfiguration("/**",cors);
         return configuration;
+    }
+
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthority() {
+        return new GrantedAuthorityDefaults("");
     }
 
     @Bean
@@ -80,14 +80,14 @@ public class Security {
                 .authorizeHttpRequests((requests) -> requests
                     .requestMatchers("/usuario/**").permitAll()
                     .requestMatchers("/pessoa","/carro").authenticated()
-                    .requestMatchers(HttpMethod.GET,"/pessoa/**").hasRole("USUARIO")
-                    .requestMatchers(HttpMethod.POST,"/pessoa").hasRole("ADMINISTRADOR")
-                    .requestMatchers(HttpMethod.PUT,"/pessoa").hasRole("ADMINISTRADOR")
-                    .requestMatchers(HttpMethod.DELETE,"/pessoa/**").hasRole("ADMINISTRADOR")
-                    .requestMatchers(HttpMethod.GET,"/carro/**").hasRole("USUARIO")
-                    .requestMatchers(HttpMethod.POST,"/carro").hasRole("ADMINISTRADOR")
-                    .requestMatchers(HttpMethod.PUT,"/carro").hasRole("ADMINISTRADOR")
-                    .requestMatchers(HttpMethod.DELETE,"/carro/**").hasRole("ADMINISTRADOR")
+                    .requestMatchers(HttpMethod.GET,"/pessoa/**").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.POST,"/pessoa").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.PUT,"/pessoa").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.DELETE,"/pessoa/**").hasRole(Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.GET,"/carro/**").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.POST,"/carro").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.PUT,"/carro").hasAnyRole(Permission.USER.name(),Permission.ADMIN.name())
+                    .requestMatchers(HttpMethod.DELETE,"/carro/**").hasRole(Permission.ADMIN.name())
                 )
                 .authenticationProvider(this.authenticationProvider())
                 .addFilterBefore(authentication,UsernamePasswordAuthenticationFilter.class)

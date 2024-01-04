@@ -23,8 +23,8 @@ public class UserTest extends ObjectTest {
     public void user_find_status200() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO dto = this.getUser(null,username,password,permission);
+        Permission role = Permission.USER;
+        UserDTO dto = this.getUser(null,username,password,role);
         this.repository.user.insert(dto);
         User user = this.repository.user.get(dto);
         String url = this.URL + "/" + user.getId();
@@ -37,8 +37,8 @@ public class UserTest extends ObjectTest {
         String id = "1";
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO dto = this.getUser(null,username,password,permission);
+        Permission role = Permission.USER;
+        UserDTO dto = this.getUser(null,username,password,role);
         this.repository.user.insert(dto);
         String url = this.URL + "/" + id;
         this.mock.perform(get(url)).andExpect(status().isBadRequest());
@@ -48,8 +48,8 @@ public class UserTest extends ObjectTest {
     public void user_insert_status201() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.ADMIN;
-        UserDTO user = this.getUser(null,username,password,permission);
+        Permission role = Permission.ADMIN;
+        UserDTO user = this.getUser(null,username,password,role);
         String json = this.createJson(user).toString();
         this.mock.perform(post(this.URL).contentType(this.JSON).content(json)).andExpect(status().isCreated());
     }
@@ -58,8 +58,8 @@ public class UserTest extends ObjectTest {
     public void user_insert_status400() throws Exception {
         String username = "danilo";
         String password = "";
-        Permission permission = Permission.ADMIN;
-        UserDTO user = this.getUser(null,username,password,permission);
+        Permission role = Permission.ADMIN;
+        UserDTO user = this.getUser(null,username,password,role);
         String json = this.createJson(user).toString();
         this.mock.perform(post(this.URL).contentType(this.JSON).content(json)).andExpect(status().isBadRequest());
     }
@@ -69,8 +69,8 @@ public class UserTest extends ObjectTest {
     public void user_insert_status409() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.ADMIN;
-        UserDTO user = this.getUser(null,username,password,permission);
+        Permission role = Permission.USER;
+        UserDTO user = this.getUser(null,username,password,role);
         String json = this.createJson(user).toString();
         this.repository.user.insert(user);
         this.mock.perform(post(this.URL).contentType(this.JSON).content(json)).andExpect(status().isConflict());
@@ -81,16 +81,16 @@ public class UserTest extends ObjectTest {
     public void user_update_status204() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO dto = this.getUser(null,username,password,permission);
+        Permission role = Permission.ADMIN;
+        UserDTO dto = this.getUser(null,username,password,role);
         this.repository.user.insert(dto);
 
         username = "danilo";
         password = "456";
-        permission = Permission.ADMIN;
-        dto = this.getUser(null,username,password,permission);
+        role = Permission.USER;
+        dto = this.getUser(null,username,password,role);
         User user = this.repository.user.get(dto);
-        dto = this.getUser(user.getId(),username,password,permission);
+        dto = this.getUser(user.getId(),username,password,role);
         String json = this.createJson(dto).toString();
         this.mock.perform(put(this.URL).contentType(this.JSON).content(json)).andExpect(status().isNoContent());
     }
@@ -100,14 +100,14 @@ public class UserTest extends ObjectTest {
     public void user_update_status400() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO dto = this.getUser(null,username,password,permission);
+        Permission role = Permission.USER;
+        UserDTO dto = this.getUser(null,username,password,role);
         this.repository.user.insert(dto);
 
         User user = this.repository.user.get(dto);
         username = "";
         password = "123";
-        dto = this.getUser(user.getId(),username,password,permission);
+        dto = this.getUser(user.getId(),username,password,role);
         String json = this.createJson(dto).toString();
         this.mock.perform(put(this.URL).contentType(this.JSON).content(json)).andExpect(status().isBadRequest());
     }
@@ -122,8 +122,8 @@ public class UserTest extends ObjectTest {
     public void user_findAll_status200() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO dto = this.getUser(null,username,password,permission);
+        Permission role = Permission.ADMIN;
+        UserDTO dto = this.getUser(null,username,password,role);
         this.repository.user.insert(dto);
         this.mock.perform(get(this.URL)).andExpect(status().isOk());
     }
@@ -133,8 +133,8 @@ public class UserTest extends ObjectTest {
     public void user_delete_status204() throws Exception {
         String username = "danilo";
         String password = "123";
-        Permission permission = Permission.USER;
-        UserDTO userDTO = this.getUser(null,username,password,permission);
+        Permission role = Permission.ADMIN;
+        UserDTO userDTO = this.getUser(null,username,password,role);
         this.repository.user.insert(userDTO);
         User user = this.repository.user.get(userDTO);
         String url = this.URL + "/" + user.getId();
@@ -153,16 +153,16 @@ public class UserTest extends ObjectTest {
         json.put("id",user.getId());
         json.put("username",user.getUsername());
         json.put("password",user.getPassword());
-        json.put("permission",user.getPermission());
+        json.put("role",user.getRole().name());
         return json;
     }
 
-    private UserDTO getUser(String id,String username,String password,Permission permission) {
+    private UserDTO getUser(String id,String username,String password,Permission role) {
         UserDTO user = new UserDTO();
         user.setId(id);
         user.setUsername(username);
         user.setPassword(password);
-        user.setPermission(permission);
+        user.setRole(role);
         return user;
     }
 

@@ -4,7 +4,6 @@ import com.danilo.springboot3.domain.Car;
 import com.danilo.springboot3.dto.CarDTO;
 import com.danilo.springboot3.design_pattern.FacadeRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,7 @@ public class CarService {
 
     @Transactional
     public void insert(CarDTO car) {
-        CarDTO dto = new CarDTO();
-        BeanUtils.copyProperties(car,dto);
-        dto.setId(null);
-
-        if (this.repository.car.exists(dto)) {
+        if (this.repository.car.exists(car)) {
             String msg = "Carro já cadastrado para essa pessoa na base de dados.";
             throw new ResponseStatusException(HttpStatus.CONFLICT,msg);
         }

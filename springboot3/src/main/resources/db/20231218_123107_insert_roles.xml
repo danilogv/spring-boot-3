@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="6" author="danilo.vicente">
+        <insert tableName="role">
+            <column name="id" value="731bafed-c422-4638-b6e8-cf84bc50f9dc" />
+            <column name="name" value="USER" />
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="c06b8187-fca8-455a-9bc1-9b4be694ab8e" />
+            <column name="name" value="ADMIN" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>
+
+

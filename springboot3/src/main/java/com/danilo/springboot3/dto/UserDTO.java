@@ -30,6 +30,7 @@ public class UserDTO implements Serializable {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Permission permission;
+    @NotNull(message = "Informe a PERMISSÃO de usuário.")
+    private Permission role;
 
 }

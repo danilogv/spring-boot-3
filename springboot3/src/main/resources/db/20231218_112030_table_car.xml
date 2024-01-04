@@ -11,7 +11,7 @@
             <column name="brand" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            <column name="year_fabrication" type="int">
+            <column name="year" type="int">
                 <constraints nullable="false" />
             </column>
             <column name="price" type="decimal(10,2)">
@@ -23,6 +23,6 @@
         </createTable>
         <addPrimaryKey tableName="car" columnNames="id" constraintName="pk_car" />
         <addForeignKeyConstraint baseTableName="car" baseColumnNames="person_id" constraintName="fk_person" referencedTableName="person" referencedColumnNames="id" onDelete="CASCADE" />
-        <addUniqueConstraint tableName="car" columnNames="name,brand,year_fabrication,person_id" constraintName="uq_name_brand_year_person" />
+        <addUniqueConstraint tableName="car" columnNames="name,brand,year,person_id" constraintName="uq_name_brand_year_person" />
     </changeSet>
 </databaseChangeLog>

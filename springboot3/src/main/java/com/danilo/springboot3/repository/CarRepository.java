@@ -14,7 +14,7 @@ public interface CarRepository extends JpaRepository<Car,String> {
 
     @Modifying
     @Query(value =
-        "INSERT INTO car(id,name,brand,year_fabrication,price,person_id) " +
+        "INSERT INTO car(id,name,brand,`year`,price,person_id) " +
         "VALUES (uuid(),:#{#car.name},:#{#car.brand},:#{#car.year},:#{#car.price},:#{#car.personId})"
     ,nativeQuery = true)
     void insert(CarDTO car);
@@ -22,7 +22,7 @@ public interface CarRepository extends JpaRepository<Car,String> {
     @Modifying
     @Query(value =
         "UPDATE car " +
-        "SET name = :#{#car.name},brand = :#{#car.brand},year_fabrication = :#{#car.year},price = :#{#car.price},person_id = :#{#car.personId} " +
+        "SET name = :#{#car.name},brand = :#{#car.brand},`year` = :#{#car.year},price = :#{#car.price},person_id = :#{#car.personId} " +
         "WHERE id = :#{#car.id}"
     ,nativeQuery = true)
     void update(CarDTO car);
@@ -45,7 +45,7 @@ public interface CarRepository extends JpaRepository<Car,String> {
         "SELECT * " +
         "FROM car " +
         "WHERE id = :#{#car.id} " +
-        "OR (name = :#{#car.name} AND brand = :#{#car.brand} AND year_fabrication = :#{#car.year} AND person_id = :#{#car.personId})"
+        "OR (name = :#{#car.name} AND brand = :#{#car.brand} AND `year` = :#{#car.year} AND person_id = :#{#car.personId})"
     ,nativeQuery = true)
     Car get(CarDTO car);
 
@@ -53,7 +53,7 @@ public interface CarRepository extends JpaRepository<Car,String> {
         "SELECT CASE WHEN COUNT(id) > 0 THEN 'true' ELSE 'false' END " +
         "FROM car " +
         "WHERE id = :#{#car.id} " +
-        "OR (name = :#{#car.name} AND brand = :#{#car.brand} AND year_fabrication = :#{#car.year} AND person_id = :#{#car.personId})"
+        "OR (name = :#{#car.name} AND brand = :#{#car.brand} AND `year` = :#{#car.year} AND person_id = :#{#car.personId})"
     ,nativeQuery = true)
     Boolean exists(CarDTO car);
 

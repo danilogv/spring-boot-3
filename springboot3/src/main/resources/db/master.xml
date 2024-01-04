@@ -3,4 +3,7 @@
     <include file="20231218_111507_table_person.xml" relativeToChangelogFile="true" />
     <include file="20231218_112030_table_car.xml" relativeToChangelogFile="true" />
     <include file="20231218_120045_table_user.xml" relativeToChangelogFile="true" />
+    <include file="20231218_121503_table_role.xml" relativeToChangelogFile="true" />
+    <include file="20231218_122217_table_user_role.xml" relativeToChangelogFile="true" />
+    <include file="20231218_123107_insert_roles.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

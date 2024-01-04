@@ -1,9 +1,11 @@
 package com.danilo.springboot3.service;
 
+import com.danilo.springboot3.domain.Role;
 import com.danilo.springboot3.domain.User;
 import com.danilo.springboot3.dto.AuthenticationDTO;
 import com.danilo.springboot3.dto.UserDTO;
 import com.danilo.springboot3.design_pattern.FacadeRepository;
+import com.danilo.springboot3.dto.UserRoleDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,15 +26,28 @@ public class UserService implements UserDetailsService {
     private FacadeRepository repository;
 
     @Transactional
-    public void insert(UserDTO user) {
-        if (this.repository.user.exists(user)) {
+    public void insert(UserDTO userDTO) {
+        if (this.repository.user.exists(userDTO)) {
             String msg = "Usuário já cadastrado na base de dados.";
             throw new ResponseStatusException(HttpStatus.CONFLICT,msg);
         }
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        this.repository.user.insert(user);
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        Role role = this.repository.role.get(userDTO.getRole().name());
+
+        if (Objects.isNull(role)) {
+            String msg = "Permissão de usuário só pode ser USER ou ADMIN";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,msg);
+        }
+
+        this.repository.user.insert(userDTO);
+
+        User user = this.repository.user.get(userDTO);
+        UserRoleDTO userRole = new UserRoleDTO();
+        userRole.setRoleId(role.getId());
+        userRole.setUserId(user.getId());
+        this.repository.userRole.insert(userRole);
     }
 
     @Transactional
@@ -94,6 +109,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) {
         UserDTO dto = new UserDTO();
         dto.setUsername(username);

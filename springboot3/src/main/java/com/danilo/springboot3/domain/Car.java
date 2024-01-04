@@ -35,7 +35,7 @@ public class Car implements Serializable {
     @Column(name = "brand",nullable = false)
     private String brand;
 
-    @Column(name = "year_fabrication",nullable = false)
+    @Column(name = "year",nullable = false)
     private Integer year;
 
     @Column(name = "price",nullable = false)

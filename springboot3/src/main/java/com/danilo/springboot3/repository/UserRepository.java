@@ -14,36 +14,36 @@ public interface UserRepository extends JpaRepository<User,String> {
 
     @Modifying
     @Query(value =
-        "INSERT INTO user_login(id,username,password,permission) " +
-        "VALUES (uuid(),:#{#user.username},:#{#user.password},:#{#user.permission.name()})"
+        "INSERT INTO `user`(id,username,password) " +
+        "VALUES (uuid(),:#{#user.username},:#{#user.password})"
     ,nativeQuery = true)
     void insert(UserDTO user);
 
     @Modifying
     @Query(value =
-        "UPDATE user_login " +
-        "SET username = :#{#user.username},password = :#{#user.password},permission = :#{#user.permission.name()} " +
+        "UPDATE `user` " +
+        "SET username = :#{#user.username},password = :#{#user.password} " +
         "WHERE id = :#{#user.id}"
     ,nativeQuery = true)
     void update(UserDTO user);
 
     @Modifying
     @Query(value =
-        "DELETE FROM user_login " +
+        "DELETE FROM `user` " +
         "WHERE id = :id"
     ,nativeQuery = true)
     void remove(String id);
 
     @Query(value =
         "SELECT * " +
-        "FROM user_login " +
+        "FROM `user` " +
         "ORDER BY username"
     ,nativeQuery = true)
     List<User> getAll();
 
     @Query(value =
         "SELECT * " +
-        "FROM user_login " +
+        "FROM `user` " +
         "WHERE id = :#{#user.id} " +
         "OR username = :#{#user.username}"
     ,nativeQuery = true)
@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<User,String> {
 
     @Query(value =
         "SELECT CASE WHEN COUNT(id) > 0 THEN 'true' ELSE 'false' END " +
-        "FROM user_login " +
+        "FROM `user` " +
         "WHERE id = :#{#user.id} " +
         "OR username = :#{#user.username}"
     ,nativeQuery = true)
