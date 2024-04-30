@@ -1,6 +1,6 @@
 package com.danilo.springboot3;
 
-import com.danilo.springboot3.design_pattern.FacadeRepository;
+import com.danilo.springboot3.design_pattern.facade.FacadeRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

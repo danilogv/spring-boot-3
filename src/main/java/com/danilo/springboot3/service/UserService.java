@@ -1,10 +1,11 @@
 package com.danilo.springboot3.service;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.Role;
 import com.danilo.springboot3.domain.User;
 import com.danilo.springboot3.dto.AuthenticationDTO;
 import com.danilo.springboot3.dto.UserDTO;
-import com.danilo.springboot3.design_pattern.FacadeRepository;
+import com.danilo.springboot3.design_pattern.facade.FacadeRepository;
 import com.danilo.springboot3.dto.UserRoleDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void remove(String id) {
-        UserDTO user = new UserDTO();
+        UserDTO user = Singleton.getUserDTO();
         user.setId(id);
 
         if (!this.repository.user.exists(user)) {
@@ -85,7 +86,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User get(String id) {
-        UserDTO dto = new UserDTO();
+        UserDTO dto = Singleton.getUserDTO();
         dto.setId(id);
 
         User user = this.repository.user.get(dto);
@@ -111,7 +112,7 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        UserDTO dto = new UserDTO();
+        UserDTO dto = Singleton.getUserDTO();
         dto.setUsername(username);
         User user = this.repository.user.get(dto);
 

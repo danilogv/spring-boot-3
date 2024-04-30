@@ -1,6 +1,6 @@
 package com.danilo.springboot3.configuration;
 
-import com.danilo.springboot3.design_pattern.FacadeService;
+import com.danilo.springboot3.design_pattern.facade.FacadeService;
 import com.danilo.springboot3.enumeration.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

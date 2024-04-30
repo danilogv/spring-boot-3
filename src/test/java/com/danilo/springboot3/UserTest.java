@@ -1,5 +1,6 @@
 package com.danilo.springboot3;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.User;
 import com.danilo.springboot3.dto.UserDTO;
 import com.danilo.springboot3.enumeration.Permission;
@@ -158,7 +159,7 @@ public class UserTest extends ObjectTest {
     }
 
     private UserDTO getUser(String id,String username,String password,Permission role) {
-        UserDTO user = new UserDTO();
+        UserDTO user = Singleton.getUserDTO();
         user.setId(id);
         user.setUsername(username);
         user.setPassword(password);

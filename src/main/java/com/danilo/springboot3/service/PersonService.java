@@ -1,8 +1,9 @@
 package com.danilo.springboot3.service;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.Person;
 import com.danilo.springboot3.dto.PersonDTO;
-import com.danilo.springboot3.design_pattern.FacadeRepository;
+import com.danilo.springboot3.design_pattern.facade.FacadeRepository;
 import com.danilo.springboot3.utility.Functions;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class PersonService {
 
     @Transactional
     public void remove(String id) {
-        PersonDTO person = new PersonDTO();
+        PersonDTO person = Singleton.getPersonDTO();
         person.setId(id);
 
         if (!this.repository.person.exists(person)) {

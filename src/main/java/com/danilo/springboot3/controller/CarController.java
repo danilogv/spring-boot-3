@@ -2,7 +2,7 @@ package com.danilo.springboot3.controller;
 
 import com.danilo.springboot3.domain.Car;
 import com.danilo.springboot3.dto.CarDTO;
-import com.danilo.springboot3.design_pattern.FacadeService;
+import com.danilo.springboot3.design_pattern.facade.FacadeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

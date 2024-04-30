@@ -4,7 +4,7 @@ import com.danilo.springboot3.configuration.Jwt;
 import com.danilo.springboot3.domain.User;
 import com.danilo.springboot3.dto.AuthenticationDTO;
 import com.danilo.springboot3.dto.UserDTO;
-import com.danilo.springboot3.design_pattern.FacadeService;
+import com.danilo.springboot3.design_pattern.facade.FacadeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

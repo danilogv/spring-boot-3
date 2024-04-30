@@ -1,8 +1,9 @@
 package com.danilo.springboot3.service;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.Car;
 import com.danilo.springboot3.dto.CarDTO;
-import com.danilo.springboot3.design_pattern.FacadeRepository;
+import com.danilo.springboot3.design_pattern.facade.FacadeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class CarService {
 
     @Transactional
     public void remove(String id) {
-        CarDTO car = new CarDTO();
+        CarDTO car = Singleton.getCarDTO();
         car.setId(id);
 
         if (!this.repository.car.exists(car)) {
@@ -63,7 +64,7 @@ public class CarService {
     }
 
     public Car get(String id) {
-        CarDTO dto = new CarDTO();
+        CarDTO dto = Singleton.getCarDTO();
         dto.setId(id);
         Car car = this.repository.car.get(dto);
 

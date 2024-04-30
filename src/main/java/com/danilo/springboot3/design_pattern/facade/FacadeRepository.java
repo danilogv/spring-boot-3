@@ -1,4 +1,4 @@
-package com.danilo.springboot3.design_pattern;
+package com.danilo.springboot3.design_pattern.facade;
 
 import com.danilo.springboot3.repository.CarRepository;
 import com.danilo.springboot3.repository.PersonRepository;

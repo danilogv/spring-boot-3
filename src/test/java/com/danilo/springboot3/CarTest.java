@@ -1,5 +1,6 @@
 package com.danilo.springboot3;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.Car;
 import com.danilo.springboot3.domain.Person;
 import com.danilo.springboot3.dto.CarDTO;
@@ -216,7 +217,7 @@ public class CarTest extends ObjectTest {
     }
 
     private CarDTO getCar(String id,String name,String brand,Integer year,BigDecimal price,String personId) {
-        CarDTO carro = new CarDTO();
+        CarDTO carro = Singleton.getCarDTO();
         carro.setId(id);
         carro.setName(name);
         carro.setBrand(brand);
@@ -227,7 +228,7 @@ public class CarTest extends ObjectTest {
     }
 
     private PersonDTO getPerson(String id,String name,String cpf) {
-        PersonDTO person = new PersonDTO();
+        PersonDTO person = Singleton.getPersonDTO();
         person.setId(id);
         person.setName(name);
         person.setCpf(cpf);

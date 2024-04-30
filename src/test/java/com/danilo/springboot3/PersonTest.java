@@ -1,5 +1,6 @@
 package com.danilo.springboot3;
 
+import com.danilo.springboot3.design_pattern.singleton.Singleton;
 import com.danilo.springboot3.domain.Person;
 import com.danilo.springboot3.dto.PersonDTO;
 import jakarta.transaction.Transactional;
@@ -140,7 +141,7 @@ public class PersonTest extends ObjectTest {
     }
 
     private PersonDTO getPerson(String id,String name,String cpf) {
-        PersonDTO person = new PersonDTO();
+        PersonDTO person = Singleton.getPersonDTO();
         person.setId(id);
         person.setName(name);
         person.setCpf(cpf);
